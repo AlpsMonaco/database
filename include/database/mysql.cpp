@@ -17,6 +17,11 @@ MySQL::Row::operator bool()
     return mysql_row_ != NULL;
 }
 
+size_t MySQL::Row::FieldCount()
+{
+    return field_count_;
+}
+
 MySQL::Row::Item::Item(const char* raw_data)
     : raw_data_(raw_data)
 {
@@ -37,22 +42,32 @@ MySQL::Row::Item MySQL::Row::operator[](size_t index)
     return Get(index);
 }
 
-int MySQL::Row::Item::AsInt()
+int MySQL::Row::Item::Int()
 {
     return atoi(raw_data_);
 }
 
-double MySQL::Row::Item::AsDouble()
+std::int64_t MySQL::Row::Item::Int64()
+{
+    return atoll(raw_data_);
+}
+
+std::string_view MySQL::Row::Item::StringView()
+{
+    return raw_data_;
+}
+
+double MySQL::Row::Item::Double()
 {
     return strtod(raw_data_, NULL);
 }
 
-float MySQL::Row::Item::AsFloat()
+float MySQL::Row::Item::Float()
 {
     return strtof(raw_data_, NULL);
 }
 
-std::string MySQL::Row::Item::AsString()
+std::string MySQL::Row::Item::String()
 {
     return std::string(raw_data_);
 }

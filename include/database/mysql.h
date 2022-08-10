@@ -26,10 +26,12 @@ public:
                 return DataWrapper<T>(raw_data_)();
             }
 
-            int AsInt();
-            double AsDouble();
-            float AsFloat();
-            std::string AsString();
+            std::int64_t Int64();
+            int Int();
+            double Double();
+            float Float();
+            std::string String();
+            std::string_view StringView();
             const char* Data();
 
         protected:
@@ -42,6 +44,7 @@ public:
         Item Get(size_t index);
         Item operator[](size_t index);
         operator bool();
+        size_t FieldCount();
 
     protected:
         ::MYSQL_ROW mysql_row_;
