@@ -42,6 +42,8 @@
         "xiosbase": "cpp",
         "xlocale": "cpp",
         "xlocinfo": "cpp",
-        "xlocnum": "cpp"
+        "xlocnum": "cpp",
+        "cassert": "cpp",
+        "*.rh": "cpp"
     }
 }

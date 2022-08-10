@@ -2,9 +2,9 @@
 #define __DATABASE_MYSQL_H__
 
 #include "prefix.h"
+#include "error.h"
 #include "mysql/include/mysql.h"
 #include "data_wrapper.h"
-#include <string>
 #include <string_view>
 
 NAMESPACE_DATABASE_START
@@ -14,7 +14,6 @@ public:
     class Row
     {
     public:
-        static constexpr std::string_view zero_value = "";
         class Item
         {
         public:
@@ -49,36 +48,54 @@ public:
         size_t field_count_;
     };
 
-    class Result
+    class QueryResult
     {
     public:
-        Result(int errcode, const std::string& error);
-        Result(::MYSQL_RES* mysql_res);
-        ~Result();
+        explicit QueryResult(const database::Error& error);
+        explicit QueryResult(::MYSQL_RES* mysql_res);
+        ~QueryResult();
 
-        int Errno();
-        std::string Error();
         size_t FieldCount();
+        size_t RowsCount();
         Row Next();
         void Free();
+        const database::Error& Error();
 
     protected:
-        int errno_;
-        std::string error_;
+        database::Error error_;
         ::MYSQL_RES* mysql_res_;
         size_t field_count_;
+        size_t rows_count_;
+    };
+
+    class ExecuteResult
+    {
+    public:
+        explicit ExecuteResult(const database::Error& error);
+        explicit ExecuteResult(size_t mysql_affected_rows);
+        ~ExecuteResult();
+
+        size_t AffectedRows();
+        const database::Error& Error();
+
+    protected:
+        database::Error error_;
+        size_t affected_rows_;
     };
 
     MySQL();
     ~MySQL();
-    bool Connect(const std::string& user, const std::string& pass,
-                 const std::string& host, unsigned short port,
-                 const std::string& database);
-    int Errno();
-    std::string Error();
-    Result Query(const std::string& sql);
+    Error Connect(const std::string& user, const std::string& pass,
+                  const std::string& host, unsigned short port,
+                  const std::string& database);
+    QueryResult Query(const std::string& sql);
+    ExecuteResult Execute(const std::string& sql);
+    void Close();
 
 protected:
+    int GetErrorCode();
+    std::string GetErrorMessage();
+
     ::MYSQL mysql_;
     bool is_open_;
 };

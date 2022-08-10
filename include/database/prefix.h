@@ -7,4 +7,17 @@
 
 #define NAMESPACE_DATABASE_END }
 
+#include <cassert>
+#include <iostream>
+
+#define ASSERT(expression, what)            \
+    do                                      \
+    {                                       \
+        if (!(expression))                  \
+        {                                   \
+            std::cout << what << std::endl; \
+            assert(false);                  \
+        }                                   \
+    } while (0);
+
 #endif

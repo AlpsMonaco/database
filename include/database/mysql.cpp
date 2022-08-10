@@ -28,7 +28,8 @@ MySQL::Row::Item::~Item()
 
 MySQL::Row::Item MySQL::Row::Get(size_t index)
 {
-    return Item(index < field_count_ ? mysql_row_[index] : zero_value.data());
+    ASSERT(index < field_count_, "index is larger than field count");
+    return Item(mysql_row_[index]);
 }
 
 MySQL::Row::Item MySQL::Row::operator[](size_t index)
@@ -68,57 +69,106 @@ MySQL::MySQL() : mysql_(), is_open_(false)
 
 MySQL::~MySQL()
 {
-    if (is_open_) mysql_close(&mysql_);
+    Close();
 }
 
-int MySQL::Errno()
+void MySQL::Close()
 {
-    return mysql_errno(&mysql_);
+    if (is_open_)
+    {
+        mysql_close(&mysql_);
+        is_open_ = false;
+    }
 }
 
-std::string MySQL::Error()
-{
-    return mysql_error(&mysql_);
-}
-
-bool MySQL::Connect(const std::string& user, const std::string& pass,
-                    const std::string& host, unsigned short port,
-                    const std::string& database)
+Error MySQL::Connect(const std::string& user, const std::string& pass,
+                     const std::string& host, unsigned short port,
+                     const std::string& database)
 {
     is_open_ = ::mysql_real_connect(&mysql_, host.c_str(),
                                     user.c_str(), pass.c_str(),
                                     database.c_str(), port,
                                     NULL, 0) != NULL;
-    return is_open_;
+    if (!is_open_)
+        return Error(GetErrorCode(), GetErrorMessage());
+    return Error();
 }
 
-MySQL::Result MySQL::Query(const std::string& sql)
+MySQL::QueryResult MySQL::Query(const std::string& sql)
 {
     if (::mysql_query(&mysql_, sql.c_str()))
-        return Result(Errno(), Error());
+        return QueryResult(Error(GetErrorCode(), GetErrorMessage()));
     ::MYSQL_RES* res_ptr = mysql_store_result(&mysql_);
     if (res_ptr == NULL)
-        return Result(Errno(), Error());
-    return Result(res_ptr);
+        return QueryResult(Error(GetErrorCode(), GetErrorMessage()));
+    return QueryResult(res_ptr);
 }
 
-MySQL::Result::Result(int errcode, const std::string& error)
-    : errno_(errno),
-      error_(error),
-      mysql_res_(nullptr),
-      field_count_(0)
+MySQL::ExecuteResult MySQL::Execute(const std::string& sql)
+{
+    if (::mysql_query(&mysql_, sql.c_str()))
+        return ExecuteResult(Error(GetErrorCode(), GetErrorMessage()));
+    return ExecuteResult(mysql_affected_rows(&mysql_));
+}
+
+const database::Error& MySQL::ExecuteResult::Error()
+{
+    return error_;
+}
+
+MySQL::ExecuteResult::ExecuteResult(const database::Error& error)
+    : error_(error),
+      affected_rows_(0)
 {
 }
 
-MySQL::Result::Result(::MYSQL_RES* mysql_res)
-    : errno_(0),
-      error_(),
+MySQL::ExecuteResult::ExecuteResult(size_t affected_rows)
+    : error_(),
+      affected_rows_(affected_rows)
+{
+}
+
+MySQL::ExecuteResult::~ExecuteResult()
+{
+}
+
+size_t MySQL::ExecuteResult::AffectedRows()
+{
+    return affected_rows_;
+}
+
+int MySQL::GetErrorCode()
+{
+    return mysql_errno(&mysql_);
+}
+
+std::string MySQL::GetErrorMessage()
+{
+    return mysql_error(&mysql_);
+}
+
+MySQL::QueryResult::QueryResult(const database::Error& error)
+    : error_(error),
+      mysql_res_(NULL),
+      field_count_(0),
+      rows_count_(0)
+{
+}
+
+MySQL::QueryResult::QueryResult(::MYSQL_RES* mysql_res)
+    : error_(),
       mysql_res_(mysql_res),
-      field_count_(mysql_num_fields(mysql_res))
+      field_count_(mysql_num_fields(mysql_res)),
+      rows_count_(mysql_num_rows(mysql_res))
 {
 }
 
-void MySQL::Result::Free()
+size_t MySQL::QueryResult::RowsCount()
+{
+    return rows_count_;
+}
+
+void MySQL::QueryResult::Free()
 {
     if (mysql_res_ != NULL)
     {
@@ -127,29 +177,25 @@ void MySQL::Result::Free()
     }
 }
 
-MySQL::Row MySQL::Result::Next()
+MySQL::Row MySQL::QueryResult::Next()
 {
+    ASSERT(mysql_res_ != NULL, "prior query was error or no sql select statement");
     return Row(mysql_fetch_row(mysql_res_), field_count_);
 }
 
-MySQL::Result::~Result()
+MySQL::QueryResult::~QueryResult()
 {
     Free();
 }
 
-size_t MySQL::Result::FieldCount()
-{
-    return field_count_;
-}
-
-int MySQL::Result::Errno()
-{
-    return errno_;
-}
-
-std::string MySQL::Result::Error()
+const database::Error& MySQL::QueryResult::Error()
 {
     return error_;
+}
+
+size_t MySQL::QueryResult::FieldCount()
+{
+    return field_count_;
 }
 
 NAMESPACE_DATABASE_END
