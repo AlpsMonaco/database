@@ -45,6 +45,7 @@
         "xlocnum": "cpp",
         "cassert": "cpp",
         "*.rh": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "string_view": "cpp"
     }
 }
