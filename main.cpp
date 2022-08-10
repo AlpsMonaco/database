@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <string_view>
 #include "database/mysql.h"
 
@@ -23,6 +24,7 @@ int main(int argc, char** argv)
         std::cout << err << std::endl;
         return 1;
     }
+    std::cout << std::setprecision(10);
     while (database::MySQL::Row row = query_result.Next())
     {
         std::int64_t id = row[0];

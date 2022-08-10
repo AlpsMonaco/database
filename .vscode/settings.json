@@ -44,6 +44,7 @@
         "xlocinfo": "cpp",
         "xlocnum": "cpp",
         "cassert": "cpp",
-        "*.rh": "cpp"
+        "*.rh": "cpp",
+        "iomanip": "cpp"
     }
 }
