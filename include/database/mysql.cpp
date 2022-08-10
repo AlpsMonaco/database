@@ -22,57 +22,57 @@ size_t MySQL::Row::FieldCount()
     return field_count_;
 }
 
-MySQL::Row::Item::Item(const char* raw_data)
+MySQL::Row::Data::Data(const char* raw_data)
     : raw_data_(raw_data)
 {
 }
 
-MySQL::Row::Item::~Item()
+MySQL::Row::Data::~Data()
 {
 }
 
-MySQL::Row::Item MySQL::Row::Get(size_t index)
+MySQL::Row::Data MySQL::Row::Get(size_t index)
 {
     ASSERT(index < field_count_, "index is larger than field count");
-    return Item(mysql_row_[index]);
+    return Data(mysql_row_[index]);
 }
 
-MySQL::Row::Item MySQL::Row::operator[](size_t index)
+MySQL::Row::Data MySQL::Row::operator[](size_t index)
 {
     return Get(index);
 }
 
-int MySQL::Row::Item::Int()
+int MySQL::Row::Data::Int()
 {
     return atoi(raw_data_);
 }
 
-std::int64_t MySQL::Row::Item::Int64()
+std::int64_t MySQL::Row::Data::Int64()
 {
     return atoll(raw_data_);
 }
 
-std::string_view MySQL::Row::Item::StringView()
+std::string_view MySQL::Row::Data::StringView()
 {
     return raw_data_;
 }
 
-double MySQL::Row::Item::Double()
+double MySQL::Row::Data::Double()
 {
     return strtod(raw_data_, NULL);
 }
 
-float MySQL::Row::Item::Float()
+float MySQL::Row::Data::Float()
 {
     return strtof(raw_data_, NULL);
 }
 
-std::string MySQL::Row::Item::String()
+std::string MySQL::Row::Data::String()
 {
     return std::string(raw_data_);
 }
 
-const char* MySQL::Row::Item::Data()
+const char* MySQL::Row::Data::Raw()
 {
     return raw_data_;
 }

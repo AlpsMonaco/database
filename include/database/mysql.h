@@ -14,11 +14,11 @@ public:
     class Row
     {
     public:
-        class Item
+        class Data
         {
         public:
-            Item(const char* raw_data);
-            ~Item();
+            Data(const char* raw_data);
+            ~Data();
 
             template <typename T>
             operator T()
@@ -32,7 +32,7 @@ public:
             float Float();
             std::string String();
             std::string_view StringView();
-            const char* Data();
+            const char* Raw();
 
         protected:
             const char* raw_data_;
@@ -41,8 +41,8 @@ public:
         Row(::MYSQL_ROW mysql_row, size_t field_count);
         ~Row();
 
-        Item Get(size_t index);
-        Item operator[](size_t index);
+        Data Get(size_t index);
+        Data operator[](size_t index);
         operator bool();
         size_t FieldCount();
 
