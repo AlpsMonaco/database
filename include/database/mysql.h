@@ -3,7 +3,6 @@
 
 #include "prefix.h"
 #include "error.h"
-#include "mysql/include/mysql.h"
 #include "data_wrapper.h"
 #include <string_view>
 

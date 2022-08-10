@@ -32,3 +32,6 @@
 *.app
 *.ilk
 *.pdb
+
+mysql
+bin/main

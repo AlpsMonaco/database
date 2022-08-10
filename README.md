@@ -1,5 +1,5 @@
 # database
-A modern,fluent and simple C++ mysql database library implemented wit C MySQL API.Runtime safety and no exception.  
+A modern,fluent simple and cross-platform C++ mysql database library implemented wit C MySQL API.Runtime safety and no exception.  
 
 
 ## Full Example

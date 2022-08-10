@@ -9,6 +9,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <mysql/mysql.h>
 
 #define ASSERT(expression, what)            \
     do                                      \
