@@ -52,11 +52,6 @@ std::int64_t MySQL::Row::Data::Int64()
     return atoll(raw_data_);
 }
 
-std::string_view MySQL::Row::Data::StringView()
-{
-    return raw_data_;
-}
-
 double MySQL::Row::Data::Double()
 {
     return strtod(raw_data_, NULL);

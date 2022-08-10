@@ -31,7 +31,6 @@ public:
             double Double();
             float Float();
             std::string String();
-            std::string_view StringView();
             const char* Raw();
 
         protected:
