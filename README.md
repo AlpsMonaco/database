@@ -136,17 +136,18 @@ int main(int argc, char** argv)
 ### Dependency
 mysql C API aslo known as libmysqlclient is required.
 
+### Visual Studio Code
+This library is coding with *Visual Studio Code*.With ```launch.json``` and ```tasks.json``` configured yet  
+you could open this repository's root in *Visual Studio Code* with C++ extension directly and launch main.cpp for  
+dependecy and demo test.  
+
+
 #### Windows
 Download MySQL-Community-Server from MySQL official website(```https://dev.mysql.com/downloads/mysql/``` available on 2022-08-10).  
 It doesn't whether you use ZIP or MSI Installer.You will find `include` and `lib` directory after you decompress or install it.
 Add the `include` directory path to system enviroment `INCLUDE` and the `lib` directory path to system enviroment `INCLUDE`.  
 **VS Code does not load system enviroment in real time,you may have to restart vscode.**  
 Finally you could launch `(Windows) launch` from vscode launch command or press F5 and choose `(Windows) launch`;
-
-### Visual Studio Code
-This library is coding with *Visual Studio Code*.With ```launch.json``` and ```tasks.json``` configured yet  
-you could open this repository's root in *Visual Studio Code* with C++ extension directly.  
-
 
 
 ## Usage
