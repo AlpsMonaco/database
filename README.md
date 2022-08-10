@@ -138,8 +138,8 @@ mysql C API aslo known as libmysqlclient is required.
 
 ### Visual Studio Code
 This library is coding with *Visual Studio Code*.With ```launch.json``` and ```tasks.json``` configured yet  
-you could open this repository's root in *Visual Studio Code* with C++ extension directly and launch main.cpp for  
-dependecy and demo test.  
+you could open this repository's root in *Visual Studio Code* (require C++ extension) directly and launch main.cpp  
+to check MySQL dependecy and library usage.  
 
 
 #### Windows
