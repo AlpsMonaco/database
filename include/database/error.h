@@ -25,6 +25,12 @@ public:
     int Code() const { return const_cast<Error&>(*this).Code(); }
     std::string Message() const { return const_cast<Error&>(*this).Message(); }
 
+    friend std::ostream& operator<<(std::ostream& os, const Error& error)
+    {
+        os << error.Code() << " - " << error.Message();
+        return os;
+    }
+
 protected:
     int err_code_;
     std::string err_msg_;
