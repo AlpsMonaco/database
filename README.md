@@ -214,7 +214,7 @@ if (err = query_result.Error())
 }
 ```
 **C assert will be called if the index you set in ```row[index]``` is bigger than row's total fields number**  
-**C assert will also be called if you call ```MySQL::QueryResult::Next()``` without checking error or executing no select statement**  
+**C assert will also be called if you call ```MySQL::QueryResult::Next()``` despite error exists or executing no select statement**  
 
 ### Execute
 for other statement,use MySQL::Execute()
