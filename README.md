@@ -26,14 +26,15 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    database::MySQL::QueryResult query_result = mysql.Query("select `id`,`name`,`rank`,`rate` from `user`.`name`");
+    database::MySQL::QueryResult query_result = mysql.Query(
+        "select `id`,`name`,`rank`,`rate` from `user`.`name`"
+    );
     if (err = query_result.Error())
     {
         std::cout << err << std::endl;
         return 1;
     }
     std::cout << std::setprecision(10);
-
     while (database::MySQL::Row row = query_result.Next())
     {
         std::int64_t id = row[0];
@@ -42,8 +43,9 @@ int main(int argc, char** argv)
         long double rate = row[3];
         std::cout << id << " " << name << " " << rank << " " << rate << std::endl;
     }
-
-    database::MySQL::ExecuteResult execute_result = mysql.Execute(R"(INSERT INTO `user`.`name`(`id`, `name`) VALUES (0, 'user_name');)");
+    database::MySQL::ExecuteResult execute_result = mysql.Execute(
+        R"(INSERT INTO `user`.`name`(`id`, `name`) VALUES (0, 'user_name');)"
+    );
     if (err = execute_result.Error())
     {
         std::cout << err << std::endl;
@@ -84,7 +86,9 @@ int main(int argc, char** argv)
 
     // for select statement,use MySQL::Query.
     // return MySQL::QueryResult
-    database::MySQL::QueryResult query_result = mysql.Query("select `id`,`name`,`rank`,`rate` from `user`.`name`");
+    database::MySQL::QueryResult query_result = mysql.Query(
+        "select `id`,`name`,`rank`,`rate` from `user`.`name`"
+    );
     // call MySQL::QueryResult::Error() to check whether there's error or not.
     if (err = query_result.Error())
     {
@@ -117,7 +121,9 @@ int main(int argc, char** argv)
 
     // for other statement,use MySQL::Exexute.
     // return MySQL::ExecuteResult
-    database::MySQL::ExecuteResult execute_result = mysql.Execute(R"(INSERT INTO `user`.`name`(`id`, `name`) VALUES (0, 'user_name');)");
+    database::MySQL::ExecuteResult execute_result = mysql.Execute(
+        R"(INSERT INTO `user`.`name`(`id`, `name`) VALUES (0, 'user_name');)"
+    );
     // call MySQL::ExecuteResult::Error() to check whether there's error or not.
     if (err = execute_result.Error())
     {
@@ -134,12 +140,12 @@ int main(int argc, char** argv)
 ## Project
 
 ### Dependency
-mysql C API aslo known as libmysqlclient is required.
+mysql C API aslo known as `libmysqlclient` is required.
 
 ### Visual Studio Code
 This library is coding with *Visual Studio Code*.With ```launch.json``` and ```tasks.json``` configured yet  
 you could open this repository's root in *Visual Studio Code* (require C++ extension) directly and launch main.cpp  
-to check MySQL dependecy and library usage.  
+to check MySQL dependecy and for further usage of this library .  
 
 
 #### Windows
@@ -149,6 +155,12 @@ Add the `include` directory path to system enviroment `INCLUDE` and the `lib` di
 **VS Code does not load system enviroment in real time,you may have to restart vscode.**  
 Finally you could launch `(Windows) launch` from vscode launch command or press F5 and choose `(Windows) launch`;
 
+
+#### Linux
+Install MySQL-Server or libmysqlclient-dev (mysql-devel in CentOS) on you Linux Server using apt(Ubuntu/Debian) or yum(CentOS).  
+Make sure mysql header files such as `mysql/mysql.h` exist in you system like `/usr/include` and `libmysqlclient` link library  
+is installed in you system successfully.  
+Finally you could launch `(gdb) launch` from vscode launch command or press F5 and choose `(gdb) launch`;
 
 ## Usage
 
