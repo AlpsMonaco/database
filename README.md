@@ -2,7 +2,7 @@
 A modern,fluent simple and cross-platform C++ mysql database library implemented wit C MySQL API.Runtime safety and no exception.  
 
 
-## Full Example
+## Simple Example
 ```c++
 #include <iostream>
 #include <iomanip>
@@ -18,23 +18,10 @@ int main(int argc, char** argv)
     std::string dbname = "user";
 
     database::MySQL mysql;
-
     database::Error err = mysql.Connect(user, pass, host, port, dbname);
-    if (err)
-    {
-        std::cout << err << std::endl;
-        return 1;
-    }
-
-    database::MySQL::QueryResult query_result = mysql.Query(
-        "select `id`,`name`,`rank`,`rate` from `user`.`name`"
-    );
-    if (err = query_result.Error())
-    {
-        std::cout << err << std::endl;
-        return 1;
-    }
-    std::cout << std::setprecision(10);
+    if (err) return 1;
+    auto query_result = mysql.Query("select `id`,`name`,`rank`,`rate` from `user`.`name`");
+    if (err = query_result.Error()) return 1;
     while (database::MySQL::Row row = query_result.Next())
     {
         std::int64_t id = row[0];
@@ -43,14 +30,8 @@ int main(int argc, char** argv)
         long double rate = row[3];
         std::cout << id << " " << name << " " << rank << " " << rate << std::endl;
     }
-    database::MySQL::ExecuteResult execute_result = mysql.Execute(
-        R"(INSERT INTO `user`.`name`(`id`, `name`) VALUES (0, 'user_name');)"
-    );
-    if (err = execute_result.Error())
-    {
-        std::cout << err << std::endl;
-        return 1;
-    }
+    auto execute_result = mysql.Execute(R"(INSERT INTO `user`.`name`(`id`, `name`) VALUES (0, 'user_name');)");
+    if (err = execute_result.Error()) return 1;
     std::cout << "affected rows:" << execute_result.AffectedRows() << std::endl;
     return 0;
 }
